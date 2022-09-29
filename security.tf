@@ -3,7 +3,7 @@ resource "azurerm_network_security_group" "nsg" {
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
 
- security_rule {
+  security_rule {
     name                       = "Allow-SSH"
     priority                   = 105
     direction                  = "Inbound"
@@ -50,6 +50,9 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  depends_on = [
+    azurerm_resource_group.main
+  ]
 
 }
 
@@ -57,4 +60,7 @@ resource "azurerm_network_security_group" "nsg" {
 resource "azurerm_subnet_network_security_group_association" "main" {
   subnet_id                 = azurerm_subnet.main.id
   network_security_group_id = azurerm_network_security_group.nsg.id
+  depends_on = [
+    azurerm_network_security_group.nsg
+  ]
 }
